@@ -10,6 +10,9 @@ $this->title = 'PDATU';
         <h2>Подільський державний аграрно-технічний університет</h2>
         <p class="lead">Навчально-науковий інститут дистанційної освіти.</p>
         <p><a class="btn btn-xs btn-success" href="<?=Url::to(['/site/login']);?>">Увійти на сайт</a></p>
+        <?php
+        echo Yii::$app->user->getId();
+        ?>
     </div>
     <div class="body-content">
     </div>

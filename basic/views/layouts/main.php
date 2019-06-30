@@ -29,37 +29,54 @@ AppAsset::register($this);
 
 <div class="wrap">
     <?php
+
+    if(!Yii::$app->user->isGuest) {
+        $brandLabel = Yii::$app->user->identity->surname . ' ' . Yii::$app->user->identity->name . ' ' . Yii::$app->user->identity->patronymic;
+    }
+    else {
+        $brandLabel = 'ПДАТУ';
+    }
+
     NavBar::begin([
-        'brandLabel' => 'ПДАТУ',
-        'brandUrl' => 'http://www.pdatu.edu.ua/',
+        'brandLabel' => $brandLabel,
+        'brandUrl' => ['/site'],
         'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
+            'class' => 'navbar-default navbar-fixed-top',
+        ],
+        'innerContainerOptions'=>[
+            'class'=>'container-fluid',
         ],
     ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            //['label' => 'Home', 'url' => ['/site/index']],
-            //['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Адреса', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Вхід', 'url' => ['/site/login']]
-            ) : (
+
+    $item = [];
+    if(Yii::$app->user->isGuest)
+    {
+        $item = [
+            ['label' => 'Вхід', 'url' => ['/site/login']],
+        ];
+    }
+    else {
+        $item = [
+            ['label' => 'Статистика', 'url' => ['/site/about']],
+            ['label' => 'Налаштування', 'url' => ['/site/contact']],
+            (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Вийти (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
+                . Html::submitButton('<b>Вийти</b>',['class' => 'btn btn-link logout'])
                 . Html::endForm()
                 . '</li>'
-            )
-        ],
+            ),
+        ];
+    }
+
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav navbar-right'],
+        'items' => $item,
     ]);
     NavBar::end();
     ?>
 
-    <div class="container">
+    <div class="container-fluid">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
@@ -69,7 +86,7 @@ AppAsset::register($this);
 </div>
 
 <footer class="footer">
-    <div class="container">
+    <div class="container-fluid">
         <p class="pull-left">&copy; TMV <?= date('Y');?></p>
         <p class="pull-right">
             <a href="<?=Url::to('https://sites.google.com/site/kafedraztdif/');?>">Кафедра фізики і загальнотехнічних дисциплін</a>

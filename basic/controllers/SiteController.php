@@ -61,8 +61,6 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $posts = Yii::$app->db->createCommand('SELECT * FROM user')->queryAll();
-
         return $this->render('index');
     }
 
