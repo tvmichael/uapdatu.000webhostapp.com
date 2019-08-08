@@ -50,6 +50,20 @@ class UserController extends Controller
 
 
     /**
+     * Дія при винекненні помилки
+     * @return array
+     */
+    public function actions()
+    {
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+        ];
+    }
+
+
+    /**
      * Lists all User models.
      * @return mixed
      */
@@ -143,5 +157,145 @@ class UserController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+
+
+
+
+
+
+
+
+
+    /* -- ПРАВА І РОЛІ КОРИСТУВАЧІВ --------------------------------------------------------------------------------- */
+    /**
+     * Встановлюємо ролі користувачів в файлах (варіант для малої кількості користувачів)
+     * 'class' => 'yii\rbac\PhpManager'
+     * {@inheritdoc}
+     */
+    public function actionRbacPhp()
+    {
+        /*
+        echo '<p>actionsRb-1</p><pre>';
+        $auth = Yii::$app->authManager;
+
+        // ДОЗВОЛИ ------------------------------------------------------------
+        // добавляем разрешение "editBase"
+        $editBase = $auth->createPermission('editBase');
+        $editBase->description = 'Редагувати базу даних сайту';
+        $auth->add($editBase);
+
+        // добавляем разрешение "createBd"
+        $createBd = $auth->createPermission('createBd');
+        $createBd->description = 'Створювати базу даних наукової діяльності';
+        $auth->add($createBd);
+
+        // добавляем разрешение "updatePost"
+        $updateBd = $auth->createPermission('updateBb');
+        $updateBd->description = 'Редагувати базу даних наукової діяльності';
+        $auth->add($updateBd);
+
+        // добавляем разрешение "revisionBd"
+        $revisionBd = $auth->createPermission('revisionBd');
+        $revisionBd->description = 'Перглядати базу даних наукової діяльності користувачів';
+        $auth->add($revisionBd);
+
+
+        // РОЛИ ----------------------------------------------------------------
+        // добавляем роль "user" и даём роли разрешение "createBd"
+        $user = $auth->createRole('user');
+        $auth->add($user);
+        $auth->addChild($user, $createBd);
+        $auth->addChild($user, $updateBd);
+
+        // добавляем роль "manager" и даём роли разрешение "createBd"
+        $manager = $auth->createRole('manager');
+        $auth->add($manager);
+        $auth->addChild($manager, $revisionBd);
+
+        // добавляем роль "admin" и даём роли разрешение "updatePost"
+        // а также все разрешения роли "author"
+        $admin = $auth->createRole('admin');
+        $auth->add($admin);
+        $auth->addChild($admin, $createBd);
+        $auth->addChild($admin, $updateBd);
+        $auth->addChild($admin, $manager);
+        $auth->addChild($admin, $editBase);
+
+        // ----------------------------------------------------------------------
+        // Назначение ролей пользователям. 1 и 2 это IDs возвращаемые IdentityInterface::getId()
+        // обычно реализуемый в модели User.
+        $auth->assign($manager, 2);
+        $auth->assign($admin, 1);
+
+        echo '</pre><p>actionsRb-2</p>';
+        */
+    }
+    /**
+     * Встановлюємо ролі користувачів в базу даних
+     * 'class' => 'yii\rbac\DbManager'
+     * {@inheritdoc}
+     */
+    public function actionDb()
+    {
+        echo '<pre> actionRbacDb:start<br>';
+
+        // РОЛІ -------------
+        /*
+        echo '1.role.';
+        $admin = Yii::$app->authManager->createRole('admin');
+        $admin->description = 'Адміністратор (повний доступ)';
+        Yii::$app->authManager->add($admin);
+        //
+        $manager = Yii::$app->authManager->createRole('manager');
+        $manager->description = 'Менеджер сайту (доступ для перегляду даних користувачів)';
+        Yii::$app->authManager->add($manager);
+        //
+        $user = Yii::$app->authManager->createRole('user');
+        $user->description = 'Менеджер сайту (доступ для перегляду даних користувачів)';
+        Yii::$app->authManager->add($user);
+        */
+
+        // ПРАВА ------------
+        /*echo '2.role.';
+        $createRa = Yii::$app->authManager->createPermission('canUser'); // scientific activity
+        $createRa->description = 'Право на створення каталогу наукової діяльності (research activities)';
+        Yii::$app->authManager->add($createRa);
+        //
+        $editDb = Yii::$app->authManager->createPermission('canAdmin');
+        $editDb->description = 'Право на редагування бази даних (для адміністратора)';
+        Yii::$app->authManager->add($editDb);
+        //
+        $managerRa = Yii::$app->authManager->createPermission('canManager');
+        $managerRa->description = 'Право на перегляд каталогу наукової діяльності користувачів (research activities)';
+        Yii::$app->authManager->add($managerRa);
+        */
+
+        /*
+        echo '3.role.';
+        $role_a = Yii::$app->authManager->getRole('admin');
+        $role_m = Yii::$app->authManager->getRole('manager');
+        $role_u = Yii::$app->authManager->getRole('user');
+
+        $permit_a = Yii::$app->authManager->getPermission('canAdmin');
+        $permit_m = Yii::$app->authManager->getPermission('canManager');
+        $permit_u = Yii::$app->authManager->getPermission('canUser');
+
+        Yii::$app->authManager->addChild($role_a, $permit_a);
+        Yii::$app->authManager->addChild($role_m, $permit_a);
+        Yii::$app->authManager->addChild($role_u, $permit_a);
+
+        Yii::$app->authManager->addChild($role_m, $permit_m);
+        Yii::$app->authManager->addChild($role_u, $permit_u);
+        */
+
+        /*
+        echo '4.role.';
+        $userRole = Yii::$app->authManager->getRole('user');
+        Yii::$app->authManager->assign($userRole, 2);
+        */
+
+        echo '<br>actionRbacDb:end</pre> ';
     }
 }

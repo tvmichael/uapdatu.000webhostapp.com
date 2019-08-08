@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\RegistrationForm;
+use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -20,12 +22,27 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                //'only' => ['logout'], // застосовувати правила лише для вказаних дій
                 'rules' => [
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'error', 'captcha', ],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['index', 'about', 'contact',],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['user'],
+                    ],
+                    [
+                        'actions' => ['login', 'registration', 'captcha', 'error'],
+                        'allow' => true,
+                        'roles' => ['?'],
                     ],
                 ],
             ],
@@ -49,12 +66,13 @@ class SiteController extends Controller
             ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+                //'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
     }
 
     /**
+     * Типова дія за замовчуванням
      * Displays homepage.
      *
      * @return string
@@ -125,4 +143,27 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+    /**
+     * Displays registration page.
+     *
+     * @return Response|string
+     */
+    public function actionRegistration()
+    {
+        $regigtration = new RegistrationForm;
+        $status = false;
+
+        if ($regigtration->load(Yii::$app->request->post()))
+        {
+            if($regigtration->createNewUser())
+            {
+                $status = true;
+                return $this->render('registration', ['model' => $regigtration, 'status'=>$status]);
+            };
+        }
+
+        return $this->render('registration', ['model' => $regigtration, 'status'=>$status]);
+    }
+
 }
