@@ -27,12 +27,24 @@ class LoginForm extends Model
     {
         return [
             // username and password are both required
-            [['email', 'password'], 'required'],
+            [['email'], 'required'],
+            [['password'], 'required'],
             [['email'], 'email'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'email' => 'Email',
+            'password' => 'Пароль',
         ];
     }
 
@@ -48,8 +60,9 @@ class LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
 
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+            if (!$user || !$user->validatePassword($this->email, $this->password))
+            {
+                $this->addError($attribute, 'Невірний `логін` чи `пароль`.');
             }
         }
     }
@@ -60,8 +73,9 @@ class LoginForm extends Model
      */
     public function login()
     {
-        if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*10 : 0);
+        if ($this->validate())
+        {
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
         }
         return false;
     }
@@ -76,7 +90,6 @@ class LoginForm extends Model
         if ($this->_user === false) {
             $this->_user = UserIdentify::findByEmail($this->email);
         }
-
         return $this->_user;
     }
 }
