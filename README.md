@@ -1,3 +1,1 @@
-# uapdatu
-
-uapdatu.000webhostapp.com
+# Vue CLI
